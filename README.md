@@ -4,6 +4,12 @@ JOBY
 Joby is a simple `queue` backed by `mongodb` native nodejs client
 based on, based on https://github.com/scttnlsn/monq.
 
+**Install**
+
+```bash
+npm install joby
+```
+
 **Usage**
 
 ```javascript
