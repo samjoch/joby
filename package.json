@@ -1,6 +1,6 @@
 {
   "name": "joby",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple job queue using mongodb native client (Based on https://github.com/scttnlsn/monq)",
   "main": "index.js",
   "scripts": {
