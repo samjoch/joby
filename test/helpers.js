@@ -1,4 +1,5 @@
 var _ = require('underscore');
+_.sift = require('sift');
 
 var chai = require('chai');
 var expect = chai.expect;
@@ -25,11 +26,11 @@ var db = {
         cb(null, { n: 1, ops: [data] });
       },
       findOne: function(query, cb) {
-        cb(null, _.findWhere(jobs, query));
+        cb(null, _.sift(query, jobs)[0]);
       },
-      findAndModify: function(query, sort, update, options, cb) {
-        var _jobs = _.sortBy(jobs, '_id')
-        var data = _.findWhere(_jobs, query) || {};
+      findAndModify: function(query, sort, update, opts, cb) {
+        var _jobs = _.sortBy(jobs, 'updatedAt')
+        var data = _.sift(query, _jobs)[0] || {};
         _.each(update.$set, function(v, k) {
           data[k] = v;
         });
@@ -39,5 +40,8 @@ var db = {
   }
 }
 
-_.extend(GLOBAL, { jobs: jobs, db: db, _: _, expect: expect, sinon: sinon });
+var collection = db.collection('jobs');
+
+_.extend(GLOBAL, { jobs: jobs, db: db, collection: collection,
+  _: _, expect: expect, sinon: sinon });
 

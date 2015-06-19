@@ -7,7 +7,7 @@ var worker, queues;
 describe('Worker', function() {
 
   before(function() {
-    queues = [new Queue(db, 'foobar'), new Queue(db, 'foobar2')]
+    queues = [new Queue(collection, 'foobar'), new Queue(collection, 'foobar2')]
     worker = new Worker(queues);
   });
 

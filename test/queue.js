@@ -5,20 +5,20 @@ var queue;
 
 describe('Queue', function() {
   it('has a name', function() {
-    queue = new Queue(db, 'foobar');
+    queue = new Queue(collection, 'foobar');
     expect(queue.name).to.eql('foobar');
   });
   it('has a default name', function() {
-    queue = new Queue(db);
+    queue = new Queue(collection);
     expect(queue.name).to.eql('default');
   });
   it('has a collection', function() {
-    queue = new Queue(db);
+    queue = new Queue(collection);
     expect(queue.collection).to.include.keys('insert');
   });
   describe('enqueue', function() {
     before(function(done) {
-      queue = new Queue(db, 'queue-name')
+      queue = new Queue(collection, 'queue-name')
       queue.enqueue('foobar', { foo: 'bar' }, function(err, _job) {
         job = _job;
         done();
@@ -27,8 +27,8 @@ describe('Queue', function() {
     it('has an _id', function() {
       expect(job._id).to.exist;
     });
-    it('has a name', function() {
-      expect(job.name).to.eql('foobar');
+    it('has a task', function() {
+      expect(job.task).to.eql('foobar');
     });
     it('has a queue', function() {
       expect(job.queue).to.eql('queue-name');
@@ -36,8 +36,11 @@ describe('Queue', function() {
     it('has params', function() {
       expect(job.params).to.eql({ foo: 'bar' });
     });
-    it('has an enqueued date', function() {
-      expect(job.enqueuedAt).to.be.lte(+new Date());
+    it('has an updated date', function() {
+      expect(job.updatedAt).to.be.lte(+new Date());
+    });
+    it('has a scheduled date', function() {
+      expect(job.scheduledAt).to.be.gte(+new Date());
     });
     it('has `queued` status', function() {
       expect(job.status).to.eql('queued');
@@ -52,7 +55,7 @@ describe('Queue', function() {
   describe('dequeue', function() {
     var job;
     before(function (done) {
-      queue = new Queue(db, 'queue-name')
+      queue = new Queue(collection, 'queue-name')
       queue.reset();
       queue.enqueue('task1', { foo: 'bar' }, function(err) {
         queue.enqueue('task2', { foo: 'bar' }, function(err) {
@@ -64,13 +67,13 @@ describe('Queue', function() {
       });
     });
     it('first enqueue job', function() {
-      expect(job.name).to.eql('task1');
+      expect(job.task).to.eql('task1');
     });
     it('has `dequeued` status', function() {
       expect(job.status).to.eql('dequeued');
     });
-    it('has a dequeued date', function() {
-      expect(job.dequeuedAt).to.be.lte(+new Date());
+    it('has a updated date', function() {
+      expect(job.updatedAt).to.be.lte(+new Date());
     });
   });
 });
