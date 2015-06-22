@@ -20,5 +20,8 @@
   "dependencies": {
     "colors": "^1.1.2",
     "later": "^1.1.6"
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }
