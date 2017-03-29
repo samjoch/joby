@@ -1,14 +1,19 @@
-
 var Queue = require('../lib/queue')
 var Worker = require('../lib/worker')
 
 var worker, queues;
 
+var sandbox = sinon.sandbox.create();
+
 describe('Worker', function() {
 
-  before(function() {
+  beforeEach(function() {
     queues = [new Queue(collection, 'foobar'), new Queue(collection, 'foobar2')]
     worker = new Worker(queues);
+  });
+
+  afterEach(function () {
+    sandbox.restore();
   });
 
   it('has default name', function() {
@@ -45,5 +50,23 @@ describe('Worker', function() {
     });
   });
 
+  it('computes default interval', function() {
+    expect(worker.computeInterval()).to.eql(worker.defaults.interval)
+
+    worker.range = ['10'];
+    expect(worker.computeInterval()).to.eql(worker.defaults.interval)
+  });
+
+  it('computes range interval', function() {
+    worker.range = [10, 15];
+
+    var random = sandbox.stub(Math, 'random');
+
+    random.returns(0.9);
+    expect(worker.computeInterval()).to.eql(14);
+
+    random.returns(0.1);
+    expect(worker.computeInterval()).to.eql(10);
+  });
 });
 
