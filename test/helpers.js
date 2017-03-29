@@ -42,6 +42,6 @@ var db = {
 
 var collection = db.collection('jobs');
 
-_.extend(GLOBAL, { jobs: jobs, db: db, collection: collection,
+_.extend(global, { jobs: jobs, db: db, collection: collection,
   _: _, expect: expect, sinon: sinon });
 
